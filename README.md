@@ -1,0 +1,1 @@
+# gulp-copy-ui5-thirdparty-library
