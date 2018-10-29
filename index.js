@@ -3,6 +3,7 @@ var File = require('vinyl');
 var rollup = require("rollup");
 var rollupNodeResolve = require("rollup-plugin-node-resolve");
 var rollupCjs = require("rollup-plugin-commonjs");
+var uglify = require("rollup-plugin-uglify")
 
 var formatUI5Module = (umdCode, mName) => `sap.ui.define(function(){
   ${umdCode}
@@ -17,23 +18,23 @@ var rollupTmpConfig = (mAsbPath, mName) => ({
     file: `${mName}.js`,
     format: 'umd'
   },
-  plugins: [rollupNodeResolve(), rollupCjs()]
+  plugins: [rollupNodeResolve(), rollupCjs(), uglify()]
 });
 
 const resolve = (mName) => {
   return require.resolve(mName);
 };
 
-const bundleModule = async(mName) => {
+const bundleModule = async (mName) => {
   const absPath = resolve(mName);
   const bundle = await rollup.rollup(rollupTmpConfig(absPath, mName));
   const generated = await bundle.generate({ format: "umd", name: mName });
   return formatUI5Module(generated.code, mName);
 };
 
-module.exports = function() {
+module.exports = function () {
 
-  return through2.obj(function(file, encoding, cb) {
+  return through2.obj(function (file, encoding, cb) {
     try {
       var packageJson = JSON.parse(file.contents.toString());
       var deps = packageJson.dependencies;
