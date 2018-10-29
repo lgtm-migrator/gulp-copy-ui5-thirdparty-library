@@ -1,28 +1,28 @@
 {
-    "name": "gulp-copy-ui5-thirdparty-library",
-    "version": "1.0.0",
-    "main": "index.js",
-    "author": {
-        "name": "Theo Sun",
-        "email": "theo.sun@sap.com"
-    },
-    "scripts": {
-        "clean": "rm -rf lib",
-        "release": "standard-version --commit-all --no-verify && git push --follow-tags origin master&&npm publish",
-        "commitmsg": "commitlint -E HUSKY_GIT_PARAMS"
-      },
-    "devDependencies": {
-        "@commitlint/cli": "^7.0.0",
-        "@commitlint/config-conventional": "^7.0.1",
-        "standard-version": "^4.4.0",
-        "husky": "^1.1.2"
-    },
-    "dependencies": {
-        "rollup": "^0.66.6",
-        "rollup-plugin-commonjs": "^9.2.0",
-        "rollup-plugin-node-resolve": "^3.4.0",
-        "through2": "^2.0.3",
-        "vinyl": "^2.2.0"
-    },
-    "license": "MIT"
+  "name": "gulp-copy-ui5-thirdparty-library",
+  "version": "1.1.0",
+  "main": "index.js",
+  "author": {
+    "name": "Theo Sun",
+    "email": "theo.sun@sap.com"
+  },
+  "scripts": {
+    "clean": "rm -rf lib",
+    "release": "standard-version --commit-all --no-verify && git push --follow-tags origin master&&npm publish",
+    "commitmsg": "commitlint -E HUSKY_GIT_PARAMS"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
+    "standard-version": "^4.4.0",
+    "husky": "^1.1.2"
+  },
+  "dependencies": {
+    "rollup": "^0.66.6",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "through2": "^2.0.3",
+    "vinyl": "^2.2.0"
+  },
+  "license": "MIT"
 }
