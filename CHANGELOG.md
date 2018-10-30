@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/compare/v1.2.0...v1.5.0) (2018-10-30)
+
+
+### Bug Fixes
+
+* **version:** error ([d30fc0d](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/commit/d30fc0d))
+
+
+### Features
+
+* **output:** indet-lib page ([161db12](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/commit/161db12))
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/compare/v1.2.0...v1.3.0) (2018-10-30)
 
