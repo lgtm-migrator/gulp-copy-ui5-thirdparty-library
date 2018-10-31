@@ -7,13 +7,17 @@ var { uglify } = require("rollup-plugin-uglify");
 var { existsSync, readFileSync } = require("fs");
 var { warn } = require("console");
 
-var replaceHtml = (content = "", packages) => {
+var replaceHtml = (content = "", packages = []) => {
   var r = /data-sap-ui-resourceroots='(.*?)'/g;
   var groups = r.exec(content);
   if (groups) {
     var original = JSON.parse(groups[1]);
-    var packagesObject = packages.reduce((p, c) => { p[c] = c; return p; }, {});
-    var resouceroots = Object.assign(packagesObject, original);
+    var packagesObject = packages.reduce(
+      (p, c) => {
+        p[c] = c; return p;
+      }, {}
+    );
+    var resouceroots = Object.assign(original, packagesObject);
     var resoucerootsJson = JSON.stringify(resouceroots);
     return content.replace(r, `data-sap-ui-resourceroots='${resoucerootsJson}'`);
   } else {
@@ -33,7 +37,7 @@ var rollupTmpConfig = (mAsbPath, mName) => ({
     file: `${mName}.js`,
     format: 'umd'
   },
-  onwarn: function(message) {
+  onwarn: function (message) {
     // do nothing
   },
   plugins: [rollupNodeResolve({ preferBuiltins: true }), rollupCjs(), uglify()]
@@ -43,17 +47,17 @@ const resolve = (mName) => {
   return require.resolve(mName);
 };
 
-const bundleModule = async(mName) => {
+const bundleModule = async (mName) => {
   const absPath = resolve(mName);
   const bundle = await rollup.rollup(rollupTmpConfig(absPath, mName));
   const generated = await bundle.generate({ format: "umd", name: mName });
   return formatUI5Module(generated.code, mName);
 };
 
-module.exports = function({ indexTemplateAbsPath, outputFilePath }) {
+module.exports = function ({ indexTemplateAbsPath, outputFilePath }) {
 
 
-  return through2.obj(async function(file, encoding, cb) {
+  return through2.obj(async function (file, encoding, cb) {
 
     var packageJson = JSON.parse(file.contents.toString());
     var deps = packageJson.dependencies;
@@ -79,7 +83,7 @@ module.exports = function({ indexTemplateAbsPath, outputFilePath }) {
 
         var indexHtml = replaceHtml(
           readFileSync(indexTemplateAbsPath, { encoding: "utf-8" }),
-          Object.keys(deps)
+          Object.keys(deps || {})
         );
 
         this.push(new GulpFile({
