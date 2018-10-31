@@ -1,6 +1,6 @@
 {
   "name": "gulp-copy-ui5-thirdparty-library",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "main": "index.js",
   "author": {
     "name": "Theo Sun",

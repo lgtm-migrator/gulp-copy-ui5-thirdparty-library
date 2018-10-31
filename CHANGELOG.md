@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.2"></a>
+## [1.5.2](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/compare/v1.5.1...v1.5.2) (2018-10-31)
+
+
+### Bug Fixes
+
+* **undefine:** err logic ([d785f7f](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/commit/d785f7f))
+
+
+
 <a name="1.5.1"></a>
 ## [1.5.1](https://github.com/Soontao/gulp-copy-ui5-thirdparty-library/compare/v1.5.0...v1.5.1) (2018-10-31)
 
