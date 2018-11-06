@@ -21,3 +21,19 @@ sap.ui.define("lodash", function() {
 
 })
 ```
+
+## usage
+
+```js
+gulp.src("./package.json").pipe(
+  // this lib will convert node.js library to ui5 module format
+  copyUi5Lib(
+    {
+      // index html path
+      indexTemplateAbsPath: join(__dirname, "./src/index.html"),
+      // target js output path
+      thirdpartyLibPath: "_thridparty"
+    }
+  )
+)
+```

@@ -7,15 +7,13 @@ var { uglify } = require("rollup-plugin-uglify");
 var { existsSync, readFileSync } = require("fs");
 var { warn } = require("console");
 
-var replaceHtml = (content = "", packages = []) => {
+var replaceHtml = (content = "", packages = [], libraryRoot = ".") => {
   var r = /data-sap-ui-resourceroots='(.*?)'/g;
   var groups = r.exec(content);
   if (groups) {
     var original = JSON.parse(groups[1]);
     var packagesObject = packages.reduce(
-      (p, c) => {
-        p[c] = c; return p;
-      }, {}
+      (p, c) => Object.assign(p, { [c]: `${libraryRoot}/${c}` }), {}
     );
     var resouceroots = Object.assign(original, packagesObject);
     var resoucerootsJson = JSON.stringify(resouceroots);
@@ -37,7 +35,7 @@ var rollupTmpConfig = (mAsbPath, mName) => ({
     file: `${mName}.js`,
     format: 'umd'
   },
-  onwarn: function (message) {
+  onwarn: function(message) {
     // do nothing
   },
   plugins: [rollupNodeResolve({ preferBuiltins: true }), rollupCjs(), uglify()]
@@ -47,17 +45,22 @@ const resolve = (mName) => {
   return require.resolve(mName);
 };
 
-const bundleModule = async (mName) => {
+const bundleModule = async(mName) => {
   const absPath = resolve(mName);
   const bundle = await rollup.rollup(rollupTmpConfig(absPath, mName));
   const generated = await bundle.generate({ format: "umd", name: mName });
   return formatUI5Module(generated.code, mName);
 };
 
-module.exports = function ({ indexTemplateAbsPath, outputFilePath }) {
+module.exports = function({ indexTemplateAbsPath, outputFilePath, thirdpartyLibPath = "." }) {
 
+  var targetJSPath = thirdpartyLibPath;
 
-  return through2.obj(async function (file, encoding, cb) {
+  if (targetJSPath.endsWith("/") || targetJSPath.startsWith("/")) {
+    throw new Error(`Not accept path :${thirdpartyLibPath}, please give thirdpartyLibPath like lib |_thirdparty | other/lib`);
+  }
+
+  return through2.obj(async function(file, encoding, cb) {
 
     var packageJson = JSON.parse(file.contents.toString());
     var deps = packageJson.dependencies;
@@ -67,10 +70,7 @@ module.exports = function ({ indexTemplateAbsPath, outputFilePath }) {
           .all(
             Object.keys(deps).map(async d => {
               const code = await bundleModule(d);
-              this.push(new GulpFile({
-                path: `${d}.js`,
-                contents: Buffer.from(code)
-              }));
+              this.push(new GulpFile({ path: `${targetJSPath}/${d}.js`, contents: Buffer.from(code) }));
             })
           );
       } catch (error) {
@@ -83,7 +83,8 @@ module.exports = function ({ indexTemplateAbsPath, outputFilePath }) {
 
         var indexHtml = replaceHtml(
           readFileSync(indexTemplateAbsPath, { encoding: "utf-8" }),
-          Object.keys(deps || {})
+          Object.keys(deps || {}),
+          targetJSPath
         );
 
         this.push(new GulpFile({
